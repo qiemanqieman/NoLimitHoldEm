@@ -38,7 +38,7 @@ export const appTheme = createTheme({
   typography: {
     fontFamily: '"Inter", "Noto Sans SC", system-ui, sans-serif',
     h1: {
-      fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+      fontSize: 'clamp(1.85rem, 6.2vw, 3.25rem)',
       fontWeight: 800,
       letterSpacing: '-0.04em',
     },

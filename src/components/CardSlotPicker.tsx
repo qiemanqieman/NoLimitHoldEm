@@ -74,12 +74,12 @@ export function CardSlotPicker({
     <Stack
       spacing={1.25}
       sx={{
-        p: 1.5,
+        p: { xs: 1.25, sm: 1.5 },
         borderRadius: 3,
         border: '1px solid',
         borderColor: disabled ? 'divider' : 'primary.main',
         opacity: disabled ? 0.48 : 1,
-        minHeight: 160,
+        minHeight: { xs: 140, sm: 160 },
         justifyContent: 'space-between',
       }}
     >
@@ -98,7 +98,7 @@ export function CardSlotPicker({
         />
       </Stack>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+      <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
         <Button
           variant="contained"
           color="primary"
@@ -106,9 +106,28 @@ export function CardSlotPicker({
           disabled={disabled}
           fullWidth
           aria-label={`${label} 点数选择`}
-          sx={{ justifyContent: 'space-between' }}
+          sx={{
+            flex: '1 1 132px',
+            px: { xs: 1.25, sm: 1.5 },
+            justifyContent: 'space-between',
+            fontSize: { xs: 13, sm: 14 },
+          }}
         >
-          点数 {draft.rank ?? '未选'}
+          <Box
+            component="span"
+            sx={{
+              display: 'flex',
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 1,
+            }}
+          >
+            <Box component="span">点数</Box>
+            <Box component="span" sx={{ fontWeight: 800 }}>
+              {draft.rank ?? '—'}
+            </Box>
+          </Box>
         </Button>
         <Button
           variant="outlined"
@@ -117,15 +136,38 @@ export function CardSlotPicker({
           disabled={disabled}
           fullWidth
           aria-label={`${label} 花色选择`}
-          sx={{ justifyContent: 'space-between' }}
+          sx={{
+            flex: '1 1 132px',
+            px: { xs: 1.25, sm: 1.5 },
+            justifyContent: 'space-between',
+            fontSize: { xs: 13, sm: 14 },
+          }}
         >
-          花色 {draft.suit ?? '未选'}
+          <Box
+            component="span"
+            sx={{
+              display: 'flex',
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 1,
+            }}
+          >
+            <Box component="span">花色</Box>
+            <Box component="span" sx={{ fontWeight: 800 }}>
+              {draft.suit ?? '—'}
+            </Box>
+          </Box>
         </Button>
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
         <Box>
-          <Typography variant="caption" color="text.secondary">
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: { xs: 'none', sm: 'block' } }}
+          >
             双按钮输入，自动阻止重复牌面
           </Typography>
         </Box>

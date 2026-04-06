@@ -193,8 +193,8 @@ function CalculatorPage() {
           <Paper
             elevation={0}
             sx={{
-              p: { xs: 2.5, md: 4 },
-              borderRadius: 6,
+              p: { xs: 2, md: 4 },
+              borderRadius: { xs: 4, md: 6 },
               border: '1px solid',
               borderColor: 'divider',
             }}
@@ -220,18 +220,20 @@ function CalculatorPage() {
                   </Typography>
                 </Box>
 
-                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                  <Chip label="Worker 并行模拟" color="primary" />
-                  <Chip label="标准误差 ≤ 0.3%" color="secondary" />
-                  <Chip label="2-10 人桌" variant="outlined" />
+                <Stack direction="row" flexWrap="wrap" useFlexGap gap={1}>
+                  <Chip size="small" label="Worker 并行模拟" color="primary" />
+                  <Chip size="small" label="标准误差 ≤ 0.3%" color="secondary" />
+                  <Chip size="small" label="2-10 人桌" variant="outlined" />
                 </Stack>
               </Stack>
 
-              <Stack direction="row" flexWrap="wrap" useFlexGap spacing={1}>
-                {selectedSummary.map((item) => (
-                  <Chip key={item} label={item} variant="outlined" />
+              <Stack direction="row" flexWrap="wrap" useFlexGap gap={1}>
+                {selectedSummary.map((item, index) => (
+                  <Chip key={`${item}-${index}`} size="small" label={item} variant="outlined" />
                 ))}
-                {cachedResult ? <Chip label="输入命中缓存" color="success" /> : null}
+                {cachedResult ? (
+                  <Chip size="small" label="输入命中缓存" color="success" />
+                ) : null}
               </Stack>
             </Stack>
           </Paper>
