@@ -26,7 +26,7 @@
 
 ## 本地安装
 
-### WSL Ubuntu 24
+### WSL Ubuntu 24.04
 
 ```bash
 corepack enable
