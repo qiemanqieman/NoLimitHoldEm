@@ -80,6 +80,37 @@ http://localhost:8080
 - 静态文件可直接部署到 nginx、GitHub Pages、Vercel
 - Docker 生产镜像基于 `nginx:alpine`
 
+## 部署到 GitHub Pages
+
+本项目已内置 GitHub Actions 工作流（分支 `dev` 推送会自动发布到 Pages），工作流文件见 [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)。
+
+### 1) 在 GitHub 仓库开启 Pages
+
+- 打开仓库 Settings → Pages
+- Source 选择 “GitHub Actions”
+
+### 2) 推送到 dev 分支触发部署
+
+```bash
+git add .
+git commit -m "deploy: enable pages"
+git push origin dev
+```
+
+部署完成后访问：
+
+```text
+https://<你的GitHub用户名>.github.io/<仓库名>/
+```
+
+### 3) 路由说明
+
+为了兼容 GitHub Pages 的静态站点行为（避免刷新 404），当前路由使用 Hash 模式：
+
+```text
+https://<你的GitHub用户名>.github.io/<仓库名>/#/
+```
+
 ## 目录结构
 
 ```text
