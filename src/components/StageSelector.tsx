@@ -11,7 +11,9 @@ interface StageSelectorProps {
 export function StageSelector({ value, onChange }: StageSelectorProps) {
   return (
     <Stack spacing={1}>
-      <Typography variant="subtitle2">公共牌阶段</Typography>
+      <Typography variant="subtitle2" color="text.secondary">
+        公共牌阶段
+      </Typography>
       <ToggleButtonGroup
         color="primary"
         exclusive
@@ -26,6 +28,15 @@ export function StageSelector({ value, onChange }: StageSelectorProps) {
           display: 'grid',
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
           width: '100%',
+          gap: 0.75,
+          '& .MuiToggleButton-root': {
+            borderRadius: 2,
+            border: '1px solid rgba(255,255,255,0.08)',
+            px: { xs: 0.75, md: 1.5 },
+            py: 0.8,
+            fontSize: { xs: 12, md: 13 },
+            fontWeight: 700,
+          },
         }}
       >
         {STAGES.map((stage) => (

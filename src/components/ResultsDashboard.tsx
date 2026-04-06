@@ -1,7 +1,8 @@
 import {
   Box,
   Button,
-  CircularProgress,
+  Chip,
+  Divider,
   LinearProgress,
   Paper,
   Skeleton,
@@ -34,27 +35,31 @@ export function ResultsDashboard({
     <Paper
       elevation={0}
       sx={{
-        p: { xs: 2, md: 3 },
-        borderRadius: 5,
+        p: { xs: 1.5, md: 2.5 },
+        borderRadius: 4,
         border: '1px solid',
         borderColor: 'divider',
-        minHeight: 380,
+        minHeight: { xs: 0, lg: 540 },
       }}
     >
-      <Stack spacing={2.5}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+      <Stack spacing={2}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1.5}>
           <Box>
-            <Typography variant="h2">结果仪表盘</Typography>
+            <Typography variant="subtitle2" color="primary.main">
+              胜率结果
+            </Typography>
+            <Typography variant="h2">胜率仪表盘</Typography>
             <Typography variant="body2" color="text.secondary">
-              蒙特卡洛模拟输出胜率、平局率与置信区间
+              实时展示胜率、平局率与模拟统计
             </Typography>
           </Box>
           <Button
-            variant="outlined"
+            variant="contained"
             color="secondary"
             onClick={onRecalculate}
             disabled={loading}
             aria-label="重新计算胜率"
+            sx={{ whiteSpace: 'nowrap' }}
           >
             重新计算
           </Button>
@@ -62,73 +67,143 @@ export function ResultsDashboard({
 
         {loading ? (
           <Stack spacing={2}>
-            <Skeleton variant="rounded" width="100%" height={220} />
+            <Skeleton variant="rounded" width="100%" height={132} />
             <LinearProgress variant="determinate" value={displayProgress} />
             <Typography variant="body2" color="text.secondary">
               正在并行模拟中：{displayProgress}%
             </Typography>
           </Stack>
         ) : result ? (
-          <Stack spacing={3}>
-            <Stack
-              direction={{ xs: 'column', md: 'row' }}
-              spacing={3}
-              alignItems={{ xs: 'flex-start', md: 'center' }}
+          <Stack spacing={2}>
+            <Box
+              sx={{
+                p: { xs: 1.5, md: 2 },
+                borderRadius: 3,
+                background:
+                  'linear-gradient(135deg, rgba(23, 78, 201, 0.24), rgba(23, 178, 104, 0.16))',
+                border: '1px solid rgba(64, 127, 255, 0.26)',
+              }}
             >
-              <Box sx={{ position: 'relative', display: 'inline-flex', alignSelf: 'center' }}>
-                <CircularProgress
-                  variant="determinate"
-                  value={100}
-                  size={180}
-                  thickness={4}
-                  sx={{ color: 'rgba(255,255,255,0.1)', position: 'absolute', inset: 0 }}
-                />
-                <CircularProgress
-                  variant="determinate"
-                  value={result.winRate * 100}
-                  size={180}
-                  thickness={4}
-                  color="primary"
-                />
-                <Box
-                  sx={{
-                    inset: 0,
-                    position: 'absolute',
-                    display: 'grid',
-                    placeItems: 'center',
-                    textAlign: 'center',
-                  }}
-                >
-                  <Typography variant="overline" color="text.secondary">
-                    胜率
-                  </Typography>
-                  <Typography variant="h3">{formatPercent(result.winRate)}</Typography>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="flex-start"
+                spacing={1.5}
+              >
+                <Box>
                   <Typography variant="caption" color="text.secondary">
-                    平局 {formatPercent(result.tieRate)}
+                    当前胜率
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: { xs: '2rem', md: '2.4rem' },
+                      fontWeight: 900,
+                      lineHeight: 1.05,
+                    }}
+                  >
+                    {formatPercent(result.winRate)}
                   </Typography>
                 </Box>
-              </Box>
+                <Stack
+                  direction="row"
+                  flexWrap="wrap"
+                  useFlexGap
+                  gap={0.75}
+                  justifyContent="flex-end"
+                >
+                  <Chip
+                    size="small"
+                    label={`平局 ${formatPercent(result.tieRate)}`}
+                    color="primary"
+                  />
+                  <Chip
+                    size="small"
+                    label={result.performanceLimited ? '性能受限' : '并行计算'}
+                    color={result.performanceLimited ? 'warning' : 'success'}
+                  />
+                </Stack>
+              </Stack>
 
-              <Stack spacing={1.5} flex={1}>
-                <Typography variant="body1">
-                  95% 置信区间：{formatPercent(result.confidenceInterval[0])} -{' '}
+              <Box sx={{ mt: 1.5 }}>
+                <LinearProgress
+                  variant="determinate"
+                  value={result.winRate * 100}
+                  sx={{
+                    height: 10,
+                    borderRadius: 999,
+                    backgroundColor: 'rgba(255,255,255,0.08)',
+                  }}
+                />
+              </Box>
+            </Box>
+
+            <Stack
+              direction="row"
+              flexWrap="wrap"
+              useFlexGap
+              gap={1}
+              sx={{
+                '& > *': {
+                  flex: '1 1 160px',
+                },
+              }}
+            >
+              <Paper
+                elevation={0}
+                sx={{ p: 1.5, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}
+              >
+                <Typography variant="caption" color="text.secondary">
+                  95% 置信区间
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 700, mt: 0.5 }}>
+                  {formatPercent(result.confidenceInterval[0])} -{' '}
                   {formatPercent(result.confidenceInterval[1])}
                 </Typography>
-                <Typography variant="body1">
-                  标准误差：{formatPercent(result.standardError)}
+              </Paper>
+              <Paper
+                elevation={0}
+                sx={{ p: 1.5, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}
+              >
+                <Typography variant="caption" color="text.secondary">
+                  标准误差
                 </Typography>
-                <Typography variant="body1">
-                  速度：{Math.round(result.handsPerSecond).toLocaleString()} 局/秒
+                <Typography variant="body1" sx={{ fontWeight: 700, mt: 0.5 }}>
+                  {formatPercent(result.standardError)}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  总样本 {result.iterations.toLocaleString()}，耗时{' '}
-                  {result.durationMs.toFixed(0)} ms，
-                  {result.performanceLimited
-                    ? '当前已回退到主线程单线程计算，性能受限。'
-                    : `并行工作线程 ${result.workerCount} 个。`}
+              </Paper>
+              <Paper
+                elevation={0}
+                sx={{ p: 1.5, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}
+              >
+                <Typography variant="caption" color="text.secondary">
+                  模拟速度
                 </Typography>
-              </Stack>
+                <Typography variant="body1" sx={{ fontWeight: 700, mt: 0.5 }}>
+                  {Math.round(result.handsPerSecond).toLocaleString()} 局/秒
+                </Typography>
+              </Paper>
+              <Paper
+                elevation={0}
+                sx={{ p: 1.5, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}
+              >
+                <Typography variant="caption" color="text.secondary">
+                  总耗时
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 700, mt: 0.5 }}>
+                  {result.durationMs.toFixed(0)} ms
+                </Typography>
+              </Paper>
             </Stack>
+
+            <Divider />
+
+            <Typography variant="body2" color="text.secondary">
+              总样本 {result.iterations.toLocaleString()}，
+              {result.lossRate > 0 ? '败率' : '败率接近零'} {formatPercent(result.lossRate)}，
+              {result.performanceLimited
+                ? '当前已回退到主线程单线程计算。'
+                : `当前使用 ${result.workerCount} 个工作线程。`}
+            </Typography>
           </Stack>
         ) : (
           <Stack spacing={1.5} justifyContent="center" sx={{ minHeight: 240 }}>
